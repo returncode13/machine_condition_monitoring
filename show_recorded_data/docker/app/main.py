@@ -1,13 +1,26 @@
 from typing import Union
 import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
 async def read_root():
-    return {"Hello": "World111"}
+    return {"Hello": "World"}
 
 
 @app.get("/data")
@@ -19,3 +32,5 @@ async def read_item():
         for f in file:
             list.append(f)
     return {"files": list}
+
+
