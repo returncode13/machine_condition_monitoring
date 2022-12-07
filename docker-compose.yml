@@ -1,0 +1,8 @@
+services:
+    recorder:
+        image: mcm:recorder
+        volumes:
+            -./../../../../data_from_mcm:/data    #data from mcm
+        ports:
+                
+            

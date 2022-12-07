@@ -1,3 +1,4 @@
+<html>
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.2.0/math.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -14,7 +15,9 @@
     <link rel="stylesheet" href="css/vertical_menu.css">
     <link rel='stylesheet' href="css/stylesheet/sidenav.css">
 </head>
-    
+
+<body>
+
 
 <!-- holds app wide state -->
 <div id="app_state" value="{}"></div>
@@ -22,7 +25,7 @@
 
 
 <!-- inline_spot pushes down its changes to all those that subscribe to it. i.e the class inline_subscriber-->
-<div id='id_audio_list' data-value='null' ></div>   <!--listener attached in audio_list.js-->
+<div id='id_audio_list' value='somevalue' ></div>   <!--listener attached in audio_list.js-->
 
 
 
@@ -39,7 +42,9 @@ The inline selector , color selector , color range slider are all called dynamic
 </div>
 
 </div>
-<!--
-<script src=./js/audio_list.js></script>
--->
+
+<script src=js/audio_list.js></script>
+</body>
+</html>
+
 

@@ -24,8 +24,28 @@ audio_filelist_url=base_url+"data"
   async function log_audio_names(){
     const result = await (await list_audio_names(audio_filelist_url)).json();
     console.log("After await: ",result)
+    updateHTML("id_audio_list","somedizzvalue")
+    let cd=document.getElementById("id_audio_list")
+    console.log("Chosen value: ",cd)
+    // cd.setAttribute('data-value',"dummy")
+  }
+
+  function updateHTML(elmId, value) {
+    var elem = document.getElementById(elmId);
+    console.log("elem: ",elem)
+    if(typeof elem !== 'undefined' && elem !== null) {
+      elem.innerHTML = value;
+    }
   }
 
   ll=log_audio_names()
 
+  // window.onload = function() {
+  //   addPageContents();  //example function call.
+  // }
+
+  window.addEventListener('load', function () {
+    console.log("It's loaded!")
+  }
+  )
  

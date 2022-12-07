@@ -1,0 +1,22 @@
+
+******** THE WHOLE THING IS ON THE HOST NETWORK ***********
+
+
+#0 
+
+
+#1
+#record data from mic
+
+#2
+#json_records
+#read from /data 
+#publish json to port 8000
+#the url is http://0.0.0.0:8000/data
+docker run -it -v /home/sharath/progs/finiteloop/machine_condition_monitoring/:/src -v /home/sharath/progs/finiteloop/data_from_mcm/:/data  -p 8000:8000 --network host mcm:show_recorded_1 
+
+#3
+#frontend
+#listen to port 8000
+#publish on port 8001 (index.html via launch.js)
+docker run -it --user=1000 --expose 8000 -p 8001:8001 -v /home/sharath/progs/finiteloop/machine_condition_monitoring/frontend/:/src  -v /home/sharath/progs/finiteloop/data_from_mcm/:/data --network host --name=mcm_frontend mcm:frontend

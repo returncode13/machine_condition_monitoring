@@ -28,6 +28,6 @@ COPY app app/
 #listen for changes on 8000
 EXPOSE  8000
 WORKDIR /home/${UNAME}/app/js
-CMD [ "node","launch.js" ]
+# CMD [ "node","launch.js" ]
 # CMD ["pwd"]
 #build using docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t image_name:tag .
