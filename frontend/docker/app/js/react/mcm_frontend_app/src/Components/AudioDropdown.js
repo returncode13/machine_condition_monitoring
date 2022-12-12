@@ -12,10 +12,10 @@ import {EVENT_FILE_CHOSEN,EVENT_MIC_CHOSEN} from '../Events/EventList'
  class AudioDropdown extends React.Component{
     constructor(props){
         super(props);
-        // console.log("PROPS:",props)
-        this.file_list=props.file_list;
+        console.log("AudioDropdown PROPS:",props)
+        this.files=props.files;
         this.state={
-            file_list:props.file_list,     //audiolist from DATA_URL
+            files:props.files,     //audiolist from DATA_URL
             chosenFile:'',                 //selected file
             chosenIndex:0,                 //its index
             cb:props.cb                    //callback executed on select
@@ -25,6 +25,7 @@ import {EVENT_FILE_CHOSEN,EVENT_MIC_CHOSEN} from '../Events/EventList'
     
     componentDidMount(){
         eventBus.on(EVENT_MIC_CHOSEN,(data)=>{
+            console.log("AudioDropdown: EVENT_MIC_CHOSEN: ",data)
             this.setState({chosenFile:''});
             this.setState({chosenIndex:0})
 
@@ -38,7 +39,7 @@ import {EVENT_FILE_CHOSEN,EVENT_MIC_CHOSEN} from '../Events/EventList'
 /*https://alexb72.medium.com/how-to-populate-react-native-picker-dynamically-with-values-from-an-api-dbe122e85a5a */
     render(){
 
-        let files=this.state.file_list.map((item,value)=>{
+        let files=this.state.files.map((item,value)=>{
             // console.log("F:",item,' Val: ',value)
             return (
                 <Picker.Item label={item} value={item} key={value}/>
@@ -50,16 +51,17 @@ import {EVENT_FILE_CHOSEN,EVENT_MIC_CHOSEN} from '../Events/EventList'
             <Picker 
             selectedValue = {this.state.chosenFile}
             onValueChange={
-                (itemValue,itemPosition) => 
-                this.setState({chosenFile:itemValue,chosenIndex:itemPosition})
+                (itemValue,itemPosition) => {
+                    this.setState({chosenFile:itemValue,chosenIndex:itemPosition});
+                    eventBus.dispatch(EVENT_FILE_CHOSEN,{"file":itemValue});
+                }
+                
             }>
                 
                {files}
                
             </Picker>
-            <p>{"Selected file: "+this.state.chosenFile}</p>
-            
-            {this.state.cb(this.state.chosenFile)}    
+            <p>{"Selected file: "+this.state.chosenFile}</p>             
             </div>
         );
     }

@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import App from './App'
 import AudioDropdown from './Components/AudioDropdown';
 import Waveform from './Components/Waveform';
 import eventBus from './Events/EventBus';
 import {EVENT_FILE_CHOSEN,EVENT_MIC_CHOSEN} from './Events/EventList';
+import AudioAnalyzerApp from './Components/AudioAnalyzerApp';
 const DATA_URL="http://0.0.0.0:8000/data"
 
 
@@ -31,26 +33,28 @@ async function list_audio_names(location){
     const result = await (await list_audio_names(DATA_URL)).json();
     const al=result.files
     console.log("After await: ",al)
+    return al;
+    
+  }
 
-    const root = ReactDOM.createRoot(document.getElementById("root"))
+populate_audio_dropdown().then((fl)=>{
+console.log("FILES: ",fl)
+
+const root = ReactDOM.createRoot(document.getElementById("root"))
     root.render(
         <div>
-            <AudioDropdown file_list={al} cb={fire_fileChosenEvent}/>
-            <Waveform/>
+           <App files={fl}/>
         </div>
     )
-  }
-
-var list_of_files=populate_audio_dropdown()
-
-let fire_fileChosenEvent=(filechosen)=>{
-  if(filechosen!=''){
-    console.log("fire_fileChosenEvent:",filechosen)
-    eventBus.dispatch(EVENT_FILE_CHOSEN,{ file:filechosen })
-  }
+    })
+// let fire_fileChosenEvent=(filechosen)=>{
+//   if(filechosen!=''){
+//     console.log("fire_fileChosenEvent:",filechosen)
+//     eventBus.dispatch(EVENT_FILE_CHOSEN,{ file:filechosen })
+//   }
     
     
-}
+// }
 
 
 

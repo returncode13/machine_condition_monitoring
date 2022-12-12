@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 class AudioVisualizer extends Component {
   constructor(props) {
     super(props);
+    console.log("AudioVisualizer: props ",props)
     this.canvas = React.createRef();
   }
 

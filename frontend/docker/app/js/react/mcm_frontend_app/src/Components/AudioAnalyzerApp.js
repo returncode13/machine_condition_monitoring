@@ -1,80 +1,62 @@
 import React, { Component } from 'react';
+import eventBus from '../Events/EventBus';
+import { EVENT_FILE_CHOSEN, EVENT_MIC_CHOSEN } from '../Events/EventList';
 import AudioAnalyzer from './AudioAnalyzer';
-import eventBus from '../Events/EventBus'
-import {EVENT_FILE_CHOSEN,EVENT_MIC_CHOSEN} from '../Events/EventList'
+import soundfile from './forwhomTBT.mp3'
 
 class AudioAnalyzerApp extends Component {
   constructor(props) {
     super(props);
-    console.log("AudioAnalyzerApp: " ,props)
     this.state = {
-      audio: props.audio,
-      isMicrophone: false
+      audio: null
     };
     this.toggleMicrophone = this.toggleMicrophone.bind(this);
   }
 
-  componentDidMount(){
-    eventBus.on(EVENT_MIC_CHOSEN,(data)=>{
-      console.log("EVENT_MIC_CHOSEN; ","",data)
-      this.setState({file:null});
-      this.setState({isMicrophone:true})
-  });
-
-  eventBus.on(EVENT_FILE_CHOSEN,(data)=>{
-    console.log("EVENT_FILE_CHOSEN; ","",data)
-    // if(this.state.isMicrophone){
-    //   this.stopMicrophone();
-    // }
-    
-    this.setState({audio:data.audio});
-    // this.setState({isMicrophone:false})
-});
-  }
-
-  componentWillUnmount(){
-    eventBus.remove(EVENT_MIC_CHOSEN)
-    eventBus.remove(EVENT_FILE_CHOSEN)
-  }
-
   async getMicrophone() {
+    eventBus.dispatch(EVENT_MIC_CHOSEN,{"message":"mic chosen"})
     const audio = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: false
     });
-    this.setState({ audio:audio });
-    this.setState({ isMicrophone:true});
-    eventBus.dispatch(EVENT_MIC_CHOSEN, {isMicrophone:true})
+    this.setState({ audio });
   }
 
   stopMicrophone() {
-    // if(this.state.audio!=undefined & this.state.audio!=null){
-      this.state.audio.getTracks().forEach(track => track.stop());
-    // }
-    
+    // this.state.audio.getTracks().forEach(track => track.stop());
     this.setState({ audio: null });
-    this.setState({isMicrophone: false})
-
   }
 
   toggleMicrophone() {
-    if (this.state.isMicrophone) {
+    if (this.state.audio) {
       this.stopMicrophone();
     } else {
       this.getMicrophone();
     }
   }
 
+  componentDidMount(){
+    eventBus.on(EVENT_FILE_CHOSEN,(data)=>{
+      console.log("AudioAnalyzerApp: EVENT_FILE_CHOSEN : "+data.file)
+      this.setState({audio:data.file})   //Test
+    })
+  }
+
+  componentWillUnmount(){
+    eventBus.remove(EVENT_FILE_CHOSEN)
+  }
+
   render() {
     return (
       <div className="AudioAnalyzerApp">
+        <p>{this.state.audio? "Audio file is "+this.state.audio:"" }</p>
         <div className="controls">
           <button onClick={this.toggleMicrophone}>
-            {this.state.isMicrophone ? 'Stop microphone' : 'Get microphone input'}
+            {this.state.audio ? 'Stop microphone' : 'Get microphone input'}
           </button>
         </div>
         
-        {this.state.isMicrophone ? <AudioAnalyzer audio={this.state.audio} /> : ''}
+        {this.state.audio ? <AudioAnalyzer audio={this.state.audio} /> : ''}
       </div>
     );
   }

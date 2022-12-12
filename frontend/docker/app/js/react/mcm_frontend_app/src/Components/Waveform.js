@@ -20,7 +20,7 @@ class Waveform extends React.Component{
     //Listen for events on mount and do corresponding actions
     componentDidMount(){
         eventBus.on(EVENT_FILE_CHOSEN,(data)=>{
-            console.log("EVENT_FILE_CHOSEN; ","",data)
+            console.log("Waveform EVENT_FILE_CHOSEN; ","",data)
             this.setState({file:data.file});
             
         })
@@ -42,7 +42,7 @@ class Waveform extends React.Component{
       render() {
     
         return (<div>
-            {/* <p>"Waveform states: file: "{this.state.file}</p> */}
+             <p>"Waveform states: file: "{this.state.file}</p> 
             <AudioAnalyzerApp  audio={this.state.file} />
             
         </div>);
