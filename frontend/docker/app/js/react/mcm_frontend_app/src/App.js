@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { startTransition } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import AudioAnalyzerApp from "./Components/AudioAnalyzerApp";
-import AudioDropdown from "./Components/AudioDropdown";
+// import AudioAnalyzerApp from "./Components/AudioAnalyzerApp";
+import RTApp  from './Appwide/Realtime/RTApp';
+import OfflineApp from './Appwide/Offline/OfflineApp';
+import AudioDropdown from './Components/AudioDropdown';
 import eventBus from "./Events/EventBus"
 import { EVENT_FILE_CHOSEN, EVENT_MIC_CHOSEN } from "./Events/EventList"
 
@@ -14,7 +16,7 @@ class App extends React.Component{
             isRealtime:true,
             files:props.files
         }
-        
+        this.toggle=this.toggle.bind(this)
     }
 
     componentDidMount(){
@@ -34,15 +36,32 @@ class App extends React.Component{
         eventBus.remove(EVENT_MIC_CHOSEN);
     }
 
+    toggle(){
+        if(this.state.isRealtime){
+            this.startOfflineApp();
+            
+        }else{
+            this.startRTApp();
+            
+        }
+    }
+
+    startOfflineApp(){
+        this.setState({isRealtime:false});
+    }
+
+    startRTApp(){
+        this.setState({isRealtime:true})
+    }
     
     render(){
 
         return(
             <div>
                 
-                <AudioDropdown files={this.state.files} />
-                <p>{"App states: isRealtime "+this.state.isRealtime}</p>
-                <AudioAnalyzerApp />
+                <button onClick={this.toggle}>{"Switch"}</button>
+                {this.state.isRealtime?<RTApp />:<OfflineApp files={this.state.files}/>}
+                
             </div>
 
         );
