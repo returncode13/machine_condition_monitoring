@@ -3,19 +3,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import logo from './logo.svg';
-import './App.css';
-import AudioVisualizer from './AudioVisualizer';
-import FreqVisualizer from './FreqVisualizer';
-
+import AudioVisualizer from '../../Components/AudioVisualizer'
+import FreqVisualizer from '../../Components/FreqVisualizer';
+import AudioDropdown from '../../Components/AudioDropdown';
+import eventBus from '../../Events/EventBus';
+import { EVENT_FILE_CHOSEN } from '../../Events/EventList';
 let datafile="forwhomTBT.mp3"
 const DATA_URL="http://0.0.0.0:8000/data/"
 
 
-class App extends React.Component{
+class OfflineApp extends React.Component{
   constructor(props){
     super(props);
+    console.log("OfflineApp: PROPS: ",props)
     this.state={
+      url:(DATA_URL+datafile),
+      files:props.files ,
       isPlaying:false,
       audioTimeData: new Uint8Array(0),
       audioFreqData:new Uint8Array(0)
@@ -28,7 +31,7 @@ class App extends React.Component{
   componentDidMount(){
     this.audioCtx=new AudioContext();
     let url=(DATA_URL+datafile);
-    this.audiof=new Audio(url);
+    this.audiof=new Audio(this.state.url);
     this.audiof.crossOrigin="anonymous";
     this.source=this.audioCtx.createMediaElementSource(this.audiof)
     this.source.connect(this.audioCtx.destination); 
@@ -38,6 +41,14 @@ class App extends React.Component{
     this.freqData = new Uint8Array(this.analyzer.frequencyBinCount);
     this.source.connect(this.analyzer)
     this.rafId = requestAnimationFrame(this.tick);
+
+    eventBus.on(EVENT_FILE_CHOSEN,(data)=>{
+        console.log("Offline APP: "+EVENT_FILE_CHOSEN+" data: "+data.file)
+        let turl=DATA_URL+data.file
+        this.setState({url:turl})
+        
+
+    })
   }
 
   togglePlay(){
@@ -69,8 +80,20 @@ tick(){
   }
 
   startPlaying(){
+    this.audiof=new Audio(this.state.url);
+    this.audiof.crossOrigin="anonymous";
+    this.source=this.audioCtx.createMediaElementSource(this.audiof)
+    this.source.connect(this.audioCtx.destination); 
+    this.analyzer=this.audioCtx.createAnalyser();
+    this.analyzer.fftSize=256
+    this.dataArray = new Uint8Array(this.analyzer.frequencyBinCount);
+    this.freqData = new Uint8Array(this.analyzer.frequencyBinCount);
+    this.source.connect(this.analyzer)
+    this.rafId = requestAnimationFrame(this.tick);
     this.audiof.play()
   }
+
+  
   componentWillUnmount() {
     cancelAnimationFrame(this.rafId);
     this.analyzer.disconnect();
@@ -80,16 +103,17 @@ tick(){
   
   render(){
     return (
-      <div className="App">
-        <p>{"Something"}</p>
+      <div className="OfflineApp">
+        <p>{"Offline App"}</p>
         <button onClick={this.togglePlay}>
 
         </button>
-        
+        <AudioDropdown files={this.state.files} />
+                
         <AudioVisualizer audioData={this.state.audioTimeData}/>
         <FreqVisualizer audioData={this.state.audioFreqData}/>
       </div>
     );
     };
   }
-export default App;
+export default OfflineApp;

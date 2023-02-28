@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import eventBus from '../Events/EventBus';
-import { EVENT_FILE_CHOSEN, EVENT_MIC_CHOSEN } from '../Events/EventList';
-import AudioAnalyzer from './AudioAnalyzer';
-import soundfile from './forwhomTBT.mp3'
+import eventBus from '../../Events/EventBus';
+import { EVENT_FILE_CHOSEN, EVENT_MIC_CHOSEN } from '../../Events/EventList';
+import AudioAnalyzer from '../../Components/AudioAnalyzer';
 
-class AudioAnalyzerApp extends Component {
+
+class RTApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,7 +48,7 @@ class AudioAnalyzerApp extends Component {
 
   render() {
     return (
-      <div className="AudioAnalyzerApp">
+      <div className="RTApp">
         <p>{this.state.audio? "Audio file is "+this.state.audio:"" }</p>
         <div className="controls">
           <button onClick={this.toggleMicrophone}>
@@ -62,4 +62,4 @@ class AudioAnalyzerApp extends Component {
   }
 }
 
-export default AudioAnalyzerApp;
+export default RTApp;
