@@ -1,0 +1,22 @@
+services:
+    recorder-app:
+        image: ros_foxy:0.0.2
+        stdin_open: true     #docker run -i
+        tty: true            #docker run -t
+             
+
+        environment:
+            - DISPLAY=DISPLAY
+            - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
+        volumes:
+            - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native
+            - ~/.config/pulse/cookie:/root/.config/pulse/cookie
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+        devices:
+            - /dev/snd
+             
+
+            
+volumes:
+    xdg_runtime_dir:    
+           
