@@ -43,6 +43,6 @@ COPY /scripts/build_audio_common.sh .
 RUN bash build_audio_common.sh
 
 # ENTRYPOINT ["]
-ARG ROS_ENTRY "./ros_entrypoint.sh"
+# ARG ROS_ENTRY "./ros_entrypoint.sh"
 
-CMD ["bash -c \"$ROS_ENTRY ;exec bash\""]
+CMD ["bash"]
