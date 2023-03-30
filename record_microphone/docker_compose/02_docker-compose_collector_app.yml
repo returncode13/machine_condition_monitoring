@@ -1,0 +1,51 @@
+services:
+
+###########################################
+## Subscribe from DDS ##
+###########################################
+
+    collector-app:
+        build: 
+            context: .
+            dockerfile: audiodatastore_collector_app.dockerfile
+            args:
+                ROS2_WS: /opt/ros2_ws
+                ROS_DISTRO: foxy
+            
+        stdin_open: true     #docker run -i
+        tty: true            #docker run -t
+
+        networks:
+            # - mcm-net
+            mcm-net:
+                ipv4_address: 172.16.238.8
+        
+        command: 
+            - /bin/bash
+            - -c 
+            - |
+                echo "Starting the collection service"
+                echo "source foxy global setup.bash"
+                source "/opt/ros/foxy/setup.bash"
+                source "/opt/ros2_ws/src/audio_common/install/local_setup.bash"
+                source "/opt/ros2_ws/datastore_collector_app/install/setup.bash"                
+
+                echo "setting ROS_DISCOVERY_SERVER=${ROS_DISCOVERY_SERVER}"
+                
+                echo "Listening to audio"                
+                ros2 run datastore_collector datastore_collector_node
+        
+        volumes:
+            - ~/.config/pulse/cookie:/root/.config/pulse/cookie
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - ~/data/telescopii/recordings/:/recordings
+        devices:
+            - /dev/snd
+
+networks:
+    mcm-net:
+        name: mcm-net
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.16.238.0/24

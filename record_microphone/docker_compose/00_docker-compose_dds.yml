@@ -7,7 +7,7 @@ services:
     dds:
         build:
             context: .
-            dockerfile: foxy_audio.dockerfile
+            dockerfile: dds_recorder.dockerfile
 
         stdin_open: true     #docker run -i
         tty: true            #docker run -t
@@ -20,7 +20,7 @@ services:
             - XDG_RUNTIME_DIR
 
         networks:
-            # - mcm-net
+           # - mcm-net
             mcm-net:
                 ipv4_address: 172.16.238.10
 
@@ -33,14 +33,9 @@ services:
                 source "/opt/ros/foxy/setup.bash"
                 echo "source "/opt/ros2_ws/src/audio_common/install/local_setup.bash""
                 source "/opt/ros2_ws/src/audio_common/install/local_setup.bash"
-                eval "$(register-python-argcomplete3 ros2)"
-                export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
                 echo "Start the discovery server"
                 fastdds discovery -i 0
         
-
-
-
 
 networks:
     mcm-net:

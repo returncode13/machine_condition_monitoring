@@ -17,9 +17,6 @@ RUN apt-get update -y && \
     apt-get clean
 
 
-
-
-
 #https://www.stereolabs.com/docs/docker/configure-ros-dockerfile/
 ENV ROS2_WS /opt/ros2_ws
 RUN mkdir -p $ROS2_WS/src

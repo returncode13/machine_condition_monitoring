@@ -7,7 +7,7 @@ services:
     recorder-app:
         build: 
             context: .
-            dockerfile: foxy_audio.dockerfile
+            dockerfile: dds_recorder.dockerfile
             args:
                 XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
                 ROS2_WS: /opt/ros2_ws 
@@ -40,13 +40,9 @@ services:
                 source "/opt/ros/foxy/setup.bash"
                 echo "source "/opt/ros2_ws/src/audio_common/install/local_setup.bash""
                 source "/opt/ros2_ws/src/audio_common/install/local_setup.bash"
-                eval "$(register-python-argcomplete3 ros2)"
                 
-                export ROS_DISCOVERY_SERVER=dds:11811
-                echo "setting ROS_DISCOVERY_SERVER=${ROS_DISCOVERY_SERVER}"
                 echo "running audio capture"
                 ros2 run audio_capture audio_capture_node
-        # depends_on: ['dds']   
             
         volumes:
             - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native                   #unix socket
