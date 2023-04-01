@@ -24,7 +24,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x |  bash - && apt-get instal
 
 WORKDIR /opt
 RUN mkdir app
-COPY app app/
+COPY react_front_app app/
 #listen for changes on 8000
 EXPOSE  8000
 # WORKDIR /home/${UNAME}/app/js

@@ -1,0 +1,44 @@
+services:
+
+    ##################################
+    ## serve sensor data ###################
+    ##################################
+    
+    serve_sensor_data:
+        build:
+            context: .
+            dockerfile: serve_sensor_data.dockerfile
+
+        stdin_open: true     #docker run -i
+        tty: true            #docker run -t
+
+        ports:
+            - 8000:8000       #port 
+            
+        environment:
+            - DISPLAY
+            - XDG_RUNTIME_DIR
+
+        networks:
+            # - mcm-net
+            mcm-net:
+                ipv4_address: 172.16.238.14
+
+        command: 
+            - /bin/bash
+            - -c 
+            - |
+                uvicorn main:app --host 0.0.0.0 --port 8000
+
+        volumes:
+            -  ~/data/telescopii/recordings/:/data   
+    
+networks:
+    mcm-net:
+        name: mcm-net
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.16.238.0/24
+    
+            

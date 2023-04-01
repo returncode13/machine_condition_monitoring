@@ -13,7 +13,7 @@ services:
         tty: true            #docker run -t
 
         ports:
-            - "3000"       #default port for react
+            - "3000:3000"       #default port for react
             
         environment:
             - DISPLAY
@@ -28,7 +28,12 @@ services:
             - /bin/bash
             - -c 
             - |
+                cd /opt/app/js/react/mcm_frontend_app
+                pwd
                 ls
+                npm start
+
+                
             
     
 networks:

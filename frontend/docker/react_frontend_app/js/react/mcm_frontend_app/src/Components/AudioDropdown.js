@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './../index.css';
+import '../index.css';
 import {Picker} from '@react-native-picker/picker';
 import eventBus from '../Events/EventBus';
 import {EVENT_FILE_CHOSEN,EVENT_MIC_CHOSEN} from '../Events/EventList'
