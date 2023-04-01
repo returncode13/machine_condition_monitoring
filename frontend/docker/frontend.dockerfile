@@ -7,7 +7,7 @@ RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
         python3-pip 
         
-COPY requirements.txt .
+COPY frontend_requirements.txt .
 # ARG UNAME=fluser
 # ARG UID=1000
 # ARG GID=1000
@@ -15,7 +15,7 @@ COPY requirements.txt .
 # RUN useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME
 # USER $UNAME
 
-RUN pip install -r requirements.txt
+RUN pip install -r frontend_requirements.txt
 # USER root
 # RUN apt-get install -y npm
 RUN apt-get update && apt-get install -y curl --fix-missing

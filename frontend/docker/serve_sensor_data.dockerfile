@@ -9,8 +9,8 @@ RUN apt-get update -y && \
         libsndfile1-dev && \
     apt-get clean
 
-COPY requirements.txt .
+COPY serve_sensor_data_app_requirements.txt .
 
-RUN pip install -r requirements.txt
+RUN pip install -r serve_sensor_data_app_requirements.txt
 
 COPY serve_sensor_data_app .
