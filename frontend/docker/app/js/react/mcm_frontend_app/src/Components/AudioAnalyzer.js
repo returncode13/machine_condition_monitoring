@@ -4,6 +4,7 @@ import { EVENT_FILE_CHOSEN, EVENT_MIC_CHOSEN } from '../Events/EventList';
 import AudioVisualizer from './AudioVisualizer';
 import soundfile from './forwhomTBT.mp3'
 import {DATA_URL} from '../Appwide/sources'
+
 class AudioAnalyzer extends Component {
   constructor(props) {
     
