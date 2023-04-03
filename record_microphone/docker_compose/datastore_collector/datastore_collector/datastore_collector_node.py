@@ -34,7 +34,7 @@ class MinimalSubscriber(Node):
         self.frames.append(msg.data)
 
         laptime = round((time.time() - self.starttime), 2)
-        self.get_logger().info('Collecting input for "%s"  seconds' %laptime)
+        #self.get_logger().info('Collecting input for "%s"  seconds' %laptime)
         if laptime >= int(self.config['DEFAULT']['clip_duration'].strip()):
             self.get_logger().info('Collected 10 sec data, now saving file')
             self.starttime = time.time()
