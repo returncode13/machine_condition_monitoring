@@ -31,6 +31,7 @@ services:
                 cd /opt/app/js/react/mcm_frontend_app
                 pwd
                 ls
+                npm install
                 npm start
 
                 
