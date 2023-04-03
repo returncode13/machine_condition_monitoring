@@ -17,7 +17,7 @@ class OfflineApp extends React.Component{
     super(props);
     console.log("OfflineApp: PROPS: ",props)
     this.state={
-      url:(DATA_URL+datafile),
+      url:(DATA_URL),
       files:props.files ,
       isPlaying:false,
       audioTimeData: new Uint8Array(0),
@@ -30,7 +30,7 @@ class OfflineApp extends React.Component{
 
   componentDidMount(){
     this.audioCtx=new AudioContext();
-    let url=(DATA_URL+datafile);
+    let url=(DATA_URL);
     this.audiof=new Audio(this.state.url);
     this.audiof.crossOrigin="anonymous";
     this.source=this.audioCtx.createMediaElementSource(this.audiof)
