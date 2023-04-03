@@ -8,7 +8,7 @@ import FreqVisualizer from '../../Components/FreqVisualizer';
 import AudioDropdown from '../../Components/AudioDropdown';
 import eventBus from '../../Events/EventBus';
 import { EVENT_FILE_CHOSEN } from '../../Events/EventList';
-let datafile="forwhomTBT.mp3"
+// let datafile="forwhomTBT.mp3"
 const DATA_URL="http://0.0.0.0:8000/data/"
 
 
@@ -112,6 +112,7 @@ tick(){
                 
         <AudioVisualizer audioData={this.state.audioTimeData}/>
         <FreqVisualizer audioData={this.state.audioFreqData}/>
+        
       </div>
     );
     };

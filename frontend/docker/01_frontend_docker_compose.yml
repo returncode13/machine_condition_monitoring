@@ -1,0 +1,47 @@
+services:
+
+    ##################################
+    ## FRONTEND ###################
+    ##################################
+    
+    frontend:
+        build:
+            context: .
+            dockerfile: frontend.dockerfile
+
+        stdin_open: true     #docker run -i
+        tty: true            #docker run -t
+
+        ports:
+            - "3000:3000"       #default port for react
+            
+        environment:
+            - DISPLAY
+            - XDG_RUNTIME_DIR
+
+        networks:
+            # - mcm-net
+            mcm-net:
+                ipv4_address: 172.16.238.13
+
+        command: 
+            - /bin/bash
+            - -c 
+            - |
+                cd /opt/app/js/react/mcm_frontend_app
+                pwd
+                ls
+                npm start
+
+                
+            
+    
+networks:
+    mcm-net:
+        name: mcm-net
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.16.238.0/24
+    
+            
