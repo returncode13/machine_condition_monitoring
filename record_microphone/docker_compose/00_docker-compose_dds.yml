@@ -18,6 +18,8 @@ services:
         environment:
             - DISPLAY
             - XDG_RUNTIME_DIR
+            
+        platform: linux/arm64/v8
 
         networks:
            # - mcm-net
