@@ -19,8 +19,7 @@ services:
             - DISPLAY
             - XDG_RUNTIME_DIR
 
-        platform: 
-            - linux/arm64
+        platform: linux/arm64
 
         networks:
            # - mcm-net
