@@ -8,9 +8,10 @@ services:
         build:
             context: .
             dockerfile: dds_rasp_recorder.dockerfile
-            platform: linux/arm64
+            
 
-
+        platform: linux/arm64
+        
         stdin_open: true     #docker run -i
         tty: true            #docker run -t
 
