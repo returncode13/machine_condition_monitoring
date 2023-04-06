@@ -8,6 +8,8 @@ services:
         build:
             context: .
             dockerfile: dds_rasp_recorder.dockerfile
+            platform: linux/arm64
+
 
         stdin_open: true     #docker run -i
         tty: true            #docker run -t
@@ -19,8 +21,7 @@ services:
             - DISPLAY
             - XDG_RUNTIME_DIR
 
-        platform: linux/arm64
-
+        
         networks:
            # - mcm-net
             mcm-net:
