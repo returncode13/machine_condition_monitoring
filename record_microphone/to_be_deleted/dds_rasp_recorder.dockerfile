@@ -5,16 +5,16 @@ ENV DEBIAN_FRONTEND noninteractive
 #https://leimao.github.io/blog/Docker-Container-Audio/
 
 # Install package dependencies
-# RUN apt-get update -y && \
-#     apt-get install -y --no-install-recommends \
-#         sudo \
-#         alsa-base \
-#         alsa-utils \
-#         pulseaudio \
-#         libportaudio2 \
-#         pip \
-#         libsndfile1-dev && \
-#     apt-get clean
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        sudo \
+        alsa-base \
+        alsa-utils \
+        pulseaudio \
+        libportaudio2 \
+        pip \
+        libsndfile1-dev && \
+    apt-get clean
 
 
 #https://www.stereolabs.com/docs/docker/configure-ros-dockerfile/
