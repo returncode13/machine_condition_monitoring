@@ -1,0 +1,52 @@
+services:
+
+##################################
+## DDS service ###################
+##################################
+
+    dds:
+        build:
+            context: .
+            dockerfile: dds_rasp_recorder.dockerfile
+
+        stdin_open: true     #docker run -i
+        tty: true            #docker run -t
+
+        ports:
+            - "11811"       #default port for fastdds see https://fast-dds.docs.eprosima.com/en/latest/fastddscli/cli/cli.html#cli-discovery
+
+        environment:
+            - DISPLAY
+            - XDG_RUNTIME_DIR
+
+        platform: linux/arm64
+
+        networks:
+           # - mcm-net
+            mcm-net:
+                ipv4_address: 172.16.238.10
+
+        command: 
+            - /bin/bash
+            - -c 
+            - |
+                echo "Starting DDS. "
+                echo "source foxy global setup.bash"
+                source "/opt/ros/foxy/setup.bash"
+                echo "source "/opt/ros2_ws/src/audio_common/install/local_setup.bash""
+                source "/opt/ros2_ws/src/audio_common/install/local_setup.bash"
+                echo "Start the discovery server"
+                fastdds discovery -i 0
+        
+
+networks:
+    mcm-net:
+        name: mcm-net
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.16.238.0/24
+
+        
+   
+           
