@@ -25,7 +25,9 @@ services:
         networks:
            # - mcm-net
             mcm-net:
-                ipv4_address: 172.16.238.10
+                # ipv4_address: 172.16.238.10
+                ipv4_address: 192.168.10.116
+
 
         command: 
             - /bin/bash
@@ -46,7 +48,8 @@ networks:
         ipam:
             driver: default
             config:
-                - subnet: 172.16.238.0/24
+                # - subnet: 172.16.238.0/24
+                - subnet: 192.168.10.0/24
 
         
    
