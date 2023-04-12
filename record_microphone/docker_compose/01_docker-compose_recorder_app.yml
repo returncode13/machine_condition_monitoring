@@ -26,10 +26,10 @@ services:
             - DISPLAY
             - XDG_RUNTIME_DIR
         
-        networks:
-            # - mcm-net
-            mcm-net:
-                ipv4_address: 172.16.238.9
+        # networks:
+        #     # - mcm-net
+        #     mcm-net:
+        #         ipv4_address: 172.16.238.9
 
         command: 
             - /bin/bash
@@ -52,12 +52,12 @@ services:
             - /dev/snd
              
 
-networks:
-    mcm-net:
-        name: mcm-net
-        ipam:
-            driver: default
-            config:
-                - subnet: 172.16.238.0/24
+# networks:
+#     mcm-net:
+#         name: mcm-net
+#         ipam:
+#             driver: default
+#             config:
+#                 - subnet: 172.16.238.0/24
    
            
