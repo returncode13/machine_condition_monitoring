@@ -17,10 +17,10 @@ services:
         stdin_open: true     #docker run -i
         tty: true            #docker run -t
 
-        networks:
-            # - mcm-net
-            mcm-net:
-                ipv4_address: 172.16.238.8
+        # networks:
+        #     # - mcm-net
+        #     mcm-net:
+        #         ipv4_address: 172.16.238.8
         
         command: 
             - /bin/bash
@@ -44,10 +44,10 @@ services:
         devices:
             - /dev/snd
 
-networks:
-    mcm-net:
-        name: mcm-net
-        ipam:
-            driver: default
-            config:
-                - subnet: 172.16.238.0/24
+# networks:
+#     mcm-net:
+#         name: mcm-net
+#         ipam:
+#             driver: default
+#             config:
+#                 - subnet: 172.16.238.0/24
