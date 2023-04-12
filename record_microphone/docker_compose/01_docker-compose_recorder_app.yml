@@ -1,3 +1,4 @@
+version: '3'
 services:
 
 ###########################################
@@ -5,14 +6,14 @@ services:
 ###########################################
 
     recorder-app:
-        build: 
-            context: .
-            dockerfile: dds_recorder.dockerfile
-            args:
-                XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
-                ROS2_WS: /opt/ros2_ws 
-                ROS_DISTRO: foxy
-
+        # build: 
+        #     context: .
+        #     dockerfile: dds_recorder.dockerfile
+        #     args:
+        #         XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR}
+        #         ROS2_WS: /opt/ros2_ws 
+        #         ROS_DISTRO: foxy
+        image: returncode13/mcm_dds
         platform: linux/arm64/v8
         
         stdin_open: true     #docker run -i
