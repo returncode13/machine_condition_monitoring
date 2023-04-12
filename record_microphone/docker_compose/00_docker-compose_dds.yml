@@ -1,3 +1,4 @@
+version: '3'
 services:
 
 ##################################
@@ -5,9 +6,10 @@ services:
 ##################################
 
     dds:
-        build:
-            context: .
-            dockerfile: dds_recorder.dockerfile
+        # build:
+        #     context: .
+        #     dockerfile: dds_recorder.dockerfile
+        image: mcm_dds:latest
 
         stdin_open: true     #docker run -i
         tty: true            #docker run -t
