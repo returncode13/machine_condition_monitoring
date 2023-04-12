@@ -14,7 +14,7 @@ services:
         #         ROS2_WS: /opt/ros2_ws 
         #         ROS_DISTRO: foxy
         image: returncode13/mcm_dds
-        platform: linux/arm64/v8
+        # platform: linux/arm64/v8
         
         stdin_open: true     #docker run -i
         tty: true            #docker run -t
