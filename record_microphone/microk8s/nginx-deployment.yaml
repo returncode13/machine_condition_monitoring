@@ -1,0 +1,42 @@
+#a Deployment needs .apiVersion, .kind, and .metadata fields. 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+
+#A Deployment also needs a .spec section.
+spec:
+#The .spec.template and .spec.selector are the only required fields of the .spec.
+  replicas: 1   #.spec.replicas is an optional field that specifies the number of desired Pods. It defaults to 1.
+  
+  selector:  #.spec.selector is a required field that specifies a label selector for the Pods targeted by this Deployment.
+             #.spec.selector must match .spec.template.metadata.labels, or it will be rejected by the API.
+    matchLabels:
+      app: nginx
+  
+  #The .spec.template is a Pod template. It has exactly the same schema as a Pod, except it is nested and does not have an apiVersion or kind.
+  #In addition to required fields for a Pod, a Pod template in a Deployment must specify appropriate labels and an appropriate restart policy.
+  #For labels, make sure not to overlap with other controllers.
+  template:
+    metadata:
+      labels:
+        app: nginx
+    
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+      nodeSelector:
+        recorder: "true"
+
+    
+  
+#NOTES:
+#In API version apps/v1, .spec.selector and .metadata.labels do not default to .spec.template.metadata.labels if not set.
+#So they must be set explicitly. Also note that .spec.selector is immutable after creation of the Deployment in apps/v1
+#
