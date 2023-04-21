@@ -1,0 +1,119 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dds-service
+spec:
+  selector:
+    app: dds
+  ports:
+  - name: dds-serv-port
+    port: 11811
+    targetPort: 11811
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dds-router-deployment
+  labels:
+    app: dds
+
+#A Deployment also needs a .spec section.
+spec:
+#The .spec.template and .spec.selector are the only required fields of the .spec.
+  replicas: 1   #.spec.replicas is an optional field that specifies the number of desired Pods. It defaults to 1.
+  
+  selector:  #.spec.selector is a required field that specifies a label selector for the Pods targeted by this Deployment.
+             #.spec.selector must match .spec.template.metadata.labels, or it will be rejected by the API.
+    matchLabels:
+      app: dds
+  
+  #The .spec.template is a Pod template. It has exactly the same schema as a Pod, except it is nested and does not have an apiVersion or kind.
+  #In addition to required fields for a Pod, a Pod template in a Deployment must specify appropriate labels and an appropriate restart policy.
+  #For labels, make sure not to overlap with other controllers.
+  template:
+    metadata:
+      labels:
+        app: dds
+    
+    spec:
+      nodeSelector:
+        dds: "true"
+
+      containers:
+      - name: dds
+        image: eprosima/vulcanexus:humble-desktop@sha256:d1129015458d4d1b47e406faefc2a819557bc73f0c4beed5ef08225e546921c2
+        
+
+        ports:
+          - name: dds-port
+            containerPort: 11811
+            
+
+        env:
+        - name: "DISPLAY"
+          value: DISPLAY
+        - name: "TERM"
+          value: xterm
+        - name: XDG_RUNTIME_DIR
+          valueFrom: 
+            configMapKeyRef:
+              name: mcm-configmap
+              key: XDG_RUNTIME_DIR
+
+
+        volumeMounts:
+        - name: dds-router-volume
+          mountPath: /dds_router
+          
+            
+        command: ["/bin/bash"]
+        
+        args: ["-c",
+              "
+              echo $TERM;
+              echo $DISPLAY;
+              
+              echo 'source /opt/vulcanexus/$VULCANEXUS_DISTRO/setup.bash';
+              source /opt/vulcanexus/$VULCANEXUS_DISTRO/setup.bash;
+
+              echo 'installing PyYaml and jq on the system';
+              pip install PyYaml;
+              apt-get update && apt-get install -y jq;
+
+              
+              echo 'dds_service_host:dds_service_port' $DDS_SERVICE_SERVICE_HOST ':' $DDS_SERVICE_SERVICE_PORT;
+              ls -ltrh /dds_router/router_configurations;
+              
+              echo 'make a copy of the original router_config file';
+              cp /dds_router/router_configurations/dds_router_config.yaml /dds_router/router_configurations/dds_router_config_v1.yaml; 
+              
+              echo 'changing permissions on change_router_ip.sh';
+              chmod 777 /dds_router/router_configurations/change_router_ip.sh;
+              ls -ltrh /dds_router/router_configurations;
+              
+              echo 'executing change of ip';
+              bash /dds_router/router_configurations/change_router_ip.sh /dds_router/router_configurations/dds_router_config.yaml $DDS_SERVICE_SERVICE_HOST $DDS_SERVICE_SERVICE_PORT
+              
+              echo 'running DDS router';
+              ddsrouter --config-path /dds_router/router_configurations/dds_router_config.yaml           
+              "
+              ]
+
+
+      volumes:
+      - name: dds-router-volume
+        hostPath:
+          path: /home/sharath/progs/finiteloop/machine_condition_monitoring/record_microphone/microk8s/dds_router/
+      
+---               #### Separator of Objects  ####
+
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: mcm-configmap
+#   namespace: default
+# data:
+#   XDG_RUNTIME_DIR: /run/user/1000

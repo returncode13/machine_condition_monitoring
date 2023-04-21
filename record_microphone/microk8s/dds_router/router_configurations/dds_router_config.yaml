@@ -1,0 +1,30 @@
+{
+  "version": "v3.0",
+  "allowlist": [
+    {
+      "name": "rt/chatter",
+      "type": "std_msgs::msg::dds_::String_"
+    }
+  ],
+  "participants": [
+    {
+      "name": "SimpleROS2",
+      "kind": "local",
+      "domain": 0
+    },
+    {
+      "name": "ServerROS2",
+      "kind": "local-discovery-server",
+      "discovery-server-guid": {
+        "ros-discovery-server": true,
+        "id": 1
+      },
+      "listening-addresses": [
+        {
+          "domain": "10.152.183.140",
+          "port": "11811"
+        }
+      ]
+    }
+  ]
+}
