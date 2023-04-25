@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+  ###################################################
+  ## DDS Service ####################################
+  ###################################################
+
+  dds:
+    image: returncode13/ros_amd
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.labels.dds_capable == true]   #we label the nodes. here I labeled  2 of my 3 nodes as dds_capable=true is my laptop
+
+    ports:
+      - "11811"       #default port for fastdds see https://fast-dds.docs.eprosima.com/en/latest/fastddscli/cli/cli.html#cli-discovery
+    
+    environment:
+      - DISPLAY
+      - XDG_RUNTIME_DIR
+    
+    command:
+        - /bin/bash
+        - -c
+        - |
+            echo "Starting DDS. "
+            echo "source foxy global setup.bash"
+            source "/opt/ros/foxy/setup.bash"
+            echo "source "/opt/ros2_ws/src/audio_common/install/local_setup.bash""
+            source "/opt/ros2_ws/src/audio_common/install/local_setup.bash"
+            echo "Start the discovery server"
+            fastdds discovery -i 0
+
+
+
+    ###################################################
+    ## RECORDER Service ###############################
+    ###################################################
+
+  recorder:
+    image: returncode13/ros_armv64
+    
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.labels.recorder == true ]  #any node that has its label set as recorder=true . In our case this is the raspberry pi
+
+    ##  PulseAudio access with UNIX Socket
+    ##  https://hub.docker.com/r/kyokuheki/vmware-horizon-client  
+
+    ##  Unix sockets on docker compose
+    ##  https://www.jujens.eu/posts/en/2017/Feb/15/docker-unix-socket/
+    environment:
+      - DISPLAY
+      - XDG_RUNTIME_DIR
+
+    #This needs to be NETWORK AWARE VOLUMES  .. TO DO LATER
+    #These volumes need to exist on target nodes, hence the constraint
+    volumes:
+        - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native                   #unix socket
+        - ~/.config/pulse/cookie:/root/.config/pulse/cookie
+        - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
+    #Devices are again tied to the constrained node. Does this work?
+    devices:
+        - /dev/snd
+
+    command: 
+        - /bin/bash
+        - -c 
+        - |
+            echo "Starting the recording service"
+            echo "source foxy global setup.bash"
+            source "/opt/ros/foxy/setup.bash"
+            echo "source "/opt/ros2_ws/src/audio_common/install/local_setup.bash""
+            source "/opt/ros2_ws/src/audio_common/install/local_setup.bash"
+            export RMW_IMPLEMENTATION="rmw_fastrtps_cpp"
+            export ROS_DISCOVERY_SERVER="dds:11811"
+            echo "running audio capture"
+            ros2 run audio_capture audio_capture_node
+          
+
+  
+
+
+
+
+
+    

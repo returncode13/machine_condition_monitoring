@@ -1,0 +1,147 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: recorder-service
+# spec:
+#   selector:
+#     app: recorder
+#   ports:
+#   - name: recorder-port
+#     port: 11811
+#     targetPort: 11811
+
+
+
+
+---
+#a Deployment needs .apiVersion, .kind, and .metadata fields. 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcm-recorder-deployment
+  labels:
+    app: recorder
+
+#A Deployment also needs a .spec section.
+spec:
+#The .spec.template and .spec.selector are the only required fields of the .spec.
+  replicas: 1   #.spec.replicas is an optional field that specifies the number of desired Pods. It defaults to 1.
+  
+  selector:  #.spec.selector is a required field that specifies a label selector for the Pods targeted by this Deployment.
+             #.spec.selector must match .spec.template.metadata.labels, or it will be rejected by the API.
+    matchLabels:
+      app: recorder
+  
+  #The .spec.template is a Pod template. It has exactly the same schema as a Pod, except it is nested and does not have an apiVersion or kind.
+  #In addition to required fields for a Pod, a Pod template in a Deployment must specify appropriate labels and an appropriate restart policy.
+  #For labels, make sure not to overlap with other controllers.
+  template:
+    metadata:
+      labels:
+        app: recorder
+    
+    spec:
+      nodeSelector:
+        recorder: "true"
+
+      containers:
+      - name: recorder
+        image: returncode13/ros_armv64
+        # image: returncode13/ros_amd
+        securityContext:
+          privileged: true
+        
+        # terminationMessagePath: "/tmp/my-log"
+
+        env:
+        - name: "DISPLAY"
+          value: DISPLAY
+        - name: "TERM"
+          value: xterm
+        - name: "RMW_IMPLEMENTATION"
+          value: rmw_fastrtps_cpp
+        # - name: "ROS_DISCOVERY_SERVER"
+        #   value: $DDS_SERVICE_SERVICE_HOST:$DDS_SERVICE_SERVICE_PORT
+        - name: XDG_RUNTIME_DIR
+          valueFrom: 
+            configMapKeyRef:
+              name: mcm-configmap
+              key: XDG_RUNTIME_DIR
+
+
+        volumeMounts:
+        - mountPath: /dev/snd
+          name: snd
+
+        - mountPath: /root/.config/pulse/cookie
+          name: pulse-cookie
+
+        - mountPath: /tmp/.X11-unix
+          name: tmp-x11
+          readOnly: true
+
+        - name: xdg-runtime-dir
+          mountPath: /run/user/1000/pulse/native
+          # subPathExpr: $(XDG_RUNTIME_DIR)
+
+      
+        
+      
+        command: ["/bin/bash"]
+        # # args: ["echo "ROS on K8"; echo "Starting the recording service" && echo "source foxy global setup.bash" && source "/opt/ros/foxy/setup.bash" && ls"]
+        args: ["-c",
+              "
+              echo $TERM;
+              echo $DISPLAY;
+              echo 'source foxy global setup.bash';
+              source /opt/ros/foxy/setup.bash;
+              echo 'source /opt/ros2_ws/src/audio_common/install/local_setup.bash';
+              source /opt/ros2_ws/src/audio_common/install/local_setup.bash;
+              echo 'DDS_SERVICE_SERVICE_HOST:DDS_SERVICE_SERVICE_PORT ' $DDS_SERVICE_SERVICE_HOST ':' $DDS_SERVICE_SERVICE_PORT;
+              export ROS_DISCOVERY_SERVER=$DDS_SERVICE_SERVICE_HOST:$DDS_SERVICE_SERVICE_PORT;
+              echo $ROS_DISCOVERY_SERVER;
+              echo 'running audio capture';
+              ros2 run audio_capture audio_capture_node
+              
+              "
+              ]
+        #"echo source /opt/ros2_ws/src/audio_common/install/local_setup.bash"
+              # source "/opt/ros2_ws/src/audio_common/install/local_setup.bash" &&
+              
+              # "echo "running audio capture" ",
+              # "ros2 run audio_capture audio_capture_node"]
+
+      volumes:
+      - name: snd
+        hostPath:
+          path: /dev/snd
+          
+      - name: pulse-cookie
+        hostPath:
+          path: /home/pi/.config/pulse/cookie
+
+      - name: tmp-x11
+        hostPath:
+          path: /tmp/.X11-unix
+
+      - name: xdg-runtime-dir
+        hostPath:
+          path: /run/user/1000/pulse/native
+      
+---               #### Separator of Objects  ####
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcm-configmap
+  namespace: default
+data:
+  XDG_RUNTIME_DIR: /run/user/1000
+      
+
+    
+  
+#NOTES:
+#In API version apps/v1, .spec.selector and .metadata.labels do not default to .spec.template.metadata.labels if not set.
+#So they must be set explicitly. Also note that .spec.selector is immutable after creation of the Deployment in apps/v1
+#

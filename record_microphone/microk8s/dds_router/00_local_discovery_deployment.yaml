@@ -95,14 +95,14 @@ spec:
               ls -ltrh /dds_router/router_configurations;
               
               echo 'executing change of ip';
-              bash /dds_router/router_configurations/change_router_ip.sh /dds_router/router_configurations/dds_router_config.yaml $DDS_SERVICE_SERVICE_HOST $DDS_SERVICE_SERVICE_PORT
+              bash /dds_router/router_configurations/change_router_ip.sh /dds_router/router_configurations/dds_router_config_v1.yaml $DDS_SERVICE_SERVICE_HOST $DDS_SERVICE_SERVICE_PORT
               
               echo 'running DDS router';
-              ddsrouter --config-path /dds_router/router_configurations/dds_router_config.yaml           
+              ddsrouter --config-path /dds_router/router_configurations/dds_router_config_v1.yaml           
               "
               ]
 
-
+      #TODO: this volume can be done away with. CREATE A NEW IMAGE with the ddsrouter config file in it.
       volumes:
       - name: dds-router-volume
         hostPath:

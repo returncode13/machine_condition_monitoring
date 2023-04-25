@@ -1,5 +1,5 @@
 #https://stackoverflow.com/a/46645799/7835192
-
+#the issue with underscores and dashes  https://stackoverflow.com/questions/37344329/jq-not-working-on-tag-name-with-dashes-and-numbers
 #install jq usign apt-get install -y jq
 
 # This uses/requires the PyYAML library; "pip install PyYAML"
