@@ -57,11 +57,11 @@ spec:
           value: DISPLAY
         - name: "TERM"
           value: xterm
-        - name: XDG_RUNTIME_DIR
-          valueFrom: 
-            configMapKeyRef:
-              name: mcm-configmap
-              key: XDG_RUNTIME_DIR
+        # - name: XDG_RUNTIME_DIR
+        #   valueFrom: 
+        #     configMapKeyRef:
+        #       name: mcm-configmap
+        #       key: XDG_RUNTIME_DIR
 
 
         volumeMounts:
@@ -104,9 +104,10 @@ spec:
 
       #TODO: this volume can be done away with. CREATE A NEW IMAGE with the ddsrouter config file in it.
       volumes:
-      - name: dds-router-volume
+      - name: dds-router-volume            #holds router config file. 
         hostPath:
-          path: /home/sharath/progs/finiteloop/machine_condition_monitoring/record_microphone/microk8s/dds_router/
+          path: /home/sharath/progs/fl/src/mcm/machine_condition_monitoring/record_microphone/microk8s/dds_router/      
+          # path: /home/sharath/progs/finiteloop/machine_condition_monitoring/record_microphone/microk8s/dds_router/
       
 ---               #### Separator of Objects  ####
 

@@ -21,7 +21,7 @@
       },
       "listening-addresses": [
         {
-          "domain": "10.152.183.140",
+          "domain": "10.152.183.168",
           "port": "11811"
         }
       ]
